@@ -1,0 +1,73 @@
+# Language
+
+```ts copy
+class Language {
+  private code: string;
+
+  constructor(code: string) {
+    if (!this.isValidLanguageCode(code)) {
+      throw new Error(
+        "Invalid language code. Please provide a valid language or locale code."
+      );
+    }
+    this.code = code;
+  }
+
+  equals(other: Language): boolean {
+    return this.code === other.code;
+  }
+
+  toString(): string {
+    return this.code;
+  }
+
+  private isValidLanguageCode(code: string): boolean {
+    // You can implement your language code validation logic here.
+    // For simplicity, we're not checking the code format in this example.
+    // In a real application, you might use a specific pattern or validate against a list of valid codes.
+    return true;
+  }
+}
+
+export { Language };
+```
+
+## Specs
+
+```ts copy
+import { Language } from "./Language"; // Adjust the import path as per your project structure
+
+describe("Language", () => {
+  describe("constructor", () => {
+    it("should create a Language instance with a valid language code", () => {
+      const language = new Language("en-US");
+      expect(language).toBeDefined();
+    });
+
+    it("should throw an error for an invalid language code", () => {
+      expect(() => new Language("invalid_code")).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Language instances with the same language code", () => {
+      const language1 = new Language("en-US");
+      const language2 = new Language("en-US");
+      expect(language1.equals(language2)).toBe(true);
+    });
+
+    it("should return false when comparing two Language instances with different language codes", () => {
+      const language1 = new Language("en-US");
+      const language2 = new Language("fr-FR");
+      expect(language1.equals(language2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Language", () => {
+      const language = new Language("en-US");
+      expect(language.toString()).toBe("en-US");
+    });
+  });
+});
+```

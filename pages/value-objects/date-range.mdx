@@ -1,0 +1,86 @@
+# DateRange
+
+```ts copy
+class DateRange {
+  private startDate: Date;
+  private endDate: Date;
+
+  constructor(startDate: Date, endDate: Date) {
+    if (startDate > endDate) {
+      throw new Error(
+        "Invalid date range. Start date should be before or equal to the end date."
+      );
+    }
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
+  equals(other: DateRange): boolean {
+    return (
+      this.startDate.getTime() === other.startDate.getTime() &&
+      this.endDate.getTime() === other.endDate.getTime()
+    );
+  }
+
+  toString(): string {
+    return `Start Date: ${this.startDate.toISOString()}, End Date: ${this.endDate.toISOString()}`;
+  }
+}
+
+export { DateRange };
+```
+
+## Specs
+
+```ts copy
+import { DateRange } from "./DateRange"; // Adjust the import path as per your project structure
+
+describe("DateRange", () => {
+  describe("constructor", () => {
+    it("should create a DateRange instance with a valid start and end date", () => {
+      const startDate = new Date("2023-01-01");
+      const endDate = new Date("2023-12-31");
+      const dateRange = new DateRange(startDate, endDate);
+      expect(dateRange).toBeDefined();
+    });
+
+    it("should throw an error for an end date earlier than the start date", () => {
+      const startDate = new Date("2023-12-31");
+      const endDate = new Date("2023-01-01");
+      expect(() => new DateRange(startDate, endDate)).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two DateRange instances with the same start and end date", () => {
+      const startDate = new Date("2023-01-01");
+      const endDate = new Date("2023-12-31");
+      const dateRange1 = new DateRange(startDate, endDate);
+      const dateRange2 = new DateRange(startDate, endDate);
+      expect(dateRange1.equals(dateRange2)).toBe(true);
+    });
+
+    it("should return false when comparing two DateRange instances with different start or end date", () => {
+      const startDate1 = new Date("2023-01-01");
+      const endDate1 = new Date("2023-12-31");
+      const dateRange1 = new DateRange(startDate1, endDate1);
+
+      const startDate2 = new Date("2023-01-01");
+      const endDate2 = new Date("2023-06-30");
+      const dateRange2 = new DateRange(startDate2, endDate2);
+      expect(dateRange1.equals(dateRange2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the DateRange", () => {
+      const startDate = new Date("2023-01-01");
+      const endDate = new Date("2023-12-31");
+      const dateRange = new DateRange(startDate, endDate);
+      expect(dateRange.toString()).toBe(
+        `Start Date: ${startDate.toISOString()}, End Date: ${endDate.toISOString()}`
+      );
+    });
+  });
+});
+```

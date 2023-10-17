@@ -1,0 +1,71 @@
+# URL
+
+```ts copy
+class URL {
+  private url: string;
+
+  constructor(url: string) {
+    if (!this.isValidURL(url)) {
+      throw new Error("Invalid URL. Please provide a valid URL.");
+    }
+    this.url = url;
+  }
+
+  equals(other: URL): boolean {
+    return this.url === other.url;
+  }
+
+  toString(): string {
+    return this.url;
+  }
+
+  private isValidURL(url: string): boolean {
+    // You can implement your URL validation logic here.
+    // For simplicity, we're not checking the URL format in this example.
+    // In a real application, you might use a specific pattern or library to validate URLs.
+    return true;
+  }
+}
+
+export { URL };
+```
+
+## Specs
+
+```ts copy
+import { URL } from "./URL"; // Adjust the import path as per your project structure
+
+describe("URL", () => {
+  describe("constructor", () => {
+    it("should create a URL instance with a valid URL", () => {
+      const url = new URL("https://www.example.com");
+      expect(url).toBeDefined();
+    });
+
+    it("should throw an error for an invalid URL", () => {
+      expect(() => new URL("invalid_url")).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two URL instances with the same URL", () => {
+      const url1 = new URL("https://www.example.com");
+      const url2 = new URL("https://www.example.com");
+      expect(url1.equals(url2)).toBe(true);
+    });
+
+    it("should return false when comparing two URL instances with different URLs", () => {
+      const url1 = new URL("https://www.example.com");
+      const url2 = new URL("https://www.anotherexample.com");
+      expect(url1.equals(url2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the URL", () => {
+      const url = new URL("https://www.example.com");
+      expect(url.toString()).toBe("https://www.example.com");
+    });
+  });
+});
+```

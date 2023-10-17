@@ -1,0 +1,127 @@
+# Money
+
+```ts copy
+class Money {
+  private amount: number;
+  private currency: string;
+
+  constructor(amount: number, currency: string) {
+    this.amount = amount;
+    this.currency = currency;
+  }
+
+  equals(other: Money): boolean {
+    return this.amount === other.amount && this.currency === other.currency;
+  }
+
+  toString(): string {
+    return `${this.amount} ${this.currency}`;
+  }
+
+  add(other: Money): Money {
+    if (this.currency !== other.currency) {
+      throw new Error("Cannot add money in different currencies");
+    }
+    return new Money(this.amount + other.amount, this.currency);
+  }
+
+  subtract(other: Money): Money {
+    if (this.currency !== other.currency) {
+      throw new Error("Cannot subtract money in different currencies");
+    }
+    return new Money(this.amount - other.amount, this.currency);
+  }
+}
+
+// Example usage:
+const money1 = new Money(100, "USD");
+const money2 = new Money(50, "USD");
+
+console.log(money1.toString()); // Output: "100 USD"
+
+const result = money1.add(money2);
+console.log(result.toString()); // Output: "150 USD"
+
+const result2 = money1.subtract(money2);
+console.log(result2.toString()); // Output: "50 USD"
+```
+
+## Specs
+
+```ts copy
+import { Money } from "./money"; // Import the Money class
+
+describe("Money", () => {
+  describe("constructor", () => {
+    it("should create a Money instance with valid amount and currency", () => {
+      const money = new Money(100, "USD");
+      expect(money).toBeDefined();
+    });
+
+    it("should throw an error for an invalid amount", () => {
+      expect(() => new Money(-100, "USD")).toThrow();
+    });
+
+    it("should throw an error for an invalid currency", () => {
+      expect(() => new Money(100, "XYZ")).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Money instances with the same amount and currency", () => {
+      const money1 = new Money(100, "USD");
+      const money2 = new Money(100, "USD");
+      expect(money1.equals(money2)).toBe(true);
+    });
+
+    it("should return false when comparing two Money instances with different amounts", () => {
+      const money1 = new Money(100, "USD");
+      const money2 = new Money(200, "USD");
+      expect(money1.equals(money2)).toBe(false);
+    });
+
+    it("should return false when comparing two Money instances with different currencies", () => {
+      const money1 = new Money(100, "USD");
+      const money2 = new Money(100, "EUR");
+      expect(money1.equals(money2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Money", () => {
+      const money = new Money(100, "USD");
+      expect(money.toString()).toBe("100 USD");
+    });
+  });
+
+  describe("add", () => {
+    it("should correctly add two Money instances with the same currency", () => {
+      const money1 = new Money(100, "USD");
+      const money2 = new Money(50, "USD");
+      const result = money1.add(money2);
+      expect(result.toString()).toBe("150 USD");
+    });
+
+    it("should throw an error when trying to add Money instances with different currencies", () => {
+      const money1 = new Money(100, "USD");
+      const money2 = new Money(50, "EUR");
+      expect(() => money1.add(money2)).toThrow();
+    });
+  });
+
+  describe("subtract", () => {
+    it("should correctly subtract two Money instances with the same currency", () => {
+      const money1 = new Money(100, "USD");
+      const money2 = new Money(50, "USD");
+      const result = money1.subtract(money2);
+      expect(result.toString()).toBe("50 USD");
+    });
+
+    it("should throw an error when trying to subtract Money instances with different currencies", () => {
+      const money1 = new Money(100, "USD");
+      const money2 = new Money(50, "EUR");
+      expect(() => money1.subtract(money2)).toThrow();
+    });
+  });
+});
+```

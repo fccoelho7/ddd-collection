@@ -1,0 +1,77 @@
+# Address
+
+```ts copy
+class Address {
+  private street: string;
+  private city: string;
+  private state: string;
+  private postalCode: string;
+
+  constructor(street: string, city: string, state: string, postalCode: string) {
+    this.street = street;
+    this.city = city;
+    this.state = state;
+    this.postalCode = postalCode;
+  }
+
+  equals(other: Address): boolean {
+    return (
+      this.street === other.street &&
+      this.city === other.city &&
+      this.state === other.state &&
+      this.postalCode === other.postalCode
+    );
+  }
+
+  toString(): string {
+    return `${this.street}, ${this.city}, ${this.state} ${this.postalCode}`;
+  }
+}
+
+// Example usage:
+const address1 = new Address("123 Main St", "Anytown", "CA", "12345");
+const address2 = new Address("456 Elm St", "Othertown", "NY", "67890");
+
+console.log(address1.toString()); // Output: "123 Main St, Anytown, CA 12345"
+console.log(address2.toString()); // Output: "456 Elm St, Othertown, NY 67890"
+```
+
+## Specs
+
+```ts copy
+import { Address } from "./address"; // Import the Address class
+
+describe("Address", () => {
+  describe("constructor", () => {
+    it("should create an Address instance with valid components", () => {
+      const address = new Address("123 Main St", "Anytown", "CA", "12345");
+      expect(address).toBeDefined();
+    });
+
+    it("should throw an error for missing components", () => {
+      expect(() => new Address("123 Main St", "Anytown", "CA")).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Address instances with the same components", () => {
+      const address1 = new Address("123 Main St", "Anytown", "CA", "12345");
+      const address2 = new Address("123 Main St", "Anytown", "CA", "12345");
+      expect(address1.equals(address2)).toBe(true);
+    });
+
+    it("should return false when comparing two Address instances with different components", () => {
+      const address1 = new Address("123 Main St", "Anytown", "CA", "12345");
+      const address2 = new Address("456 Elm St", "Othertown", "NY", "67890");
+      expect(address1.equals(address2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Address", () => {
+      const address = new Address("123 Main St", "Anytown", "CA", "12345");
+      expect(address.toString()).toBe("123 Main St, Anytown, CA 12345");
+    });
+  });
+});
+```

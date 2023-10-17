@@ -1,0 +1,76 @@
+# Dimension
+
+```ts copy
+class Dimension {
+  private length: number;
+  private width: number;
+  private height: number;
+
+  constructor(length: number, width: number, height: number) {
+    if (length <= 0 || width <= 0 || height <= 0) {
+      throw new Error(
+        "Invalid dimension. Length, width, and height should be positive numbers."
+      );
+    }
+    this.length = length;
+    this.width = width;
+    this.height = height;
+  }
+
+  equals(other: Dimension): boolean {
+    return (
+      this.length === other.length &&
+      this.width === other.width &&
+      this.height === other.height
+    );
+  }
+
+  toString(): string {
+    return `Length: ${this.length}cm, Width: ${this.width}cm, Height: ${this.height}cm`;
+  }
+}
+
+export { Dimension };
+```
+
+## Specs
+
+```ts copy
+import { Dimension } from './Dimension'; // Adjust the import path as per your project structure
+
+describe('Dimension', () => {
+  describe('constructor', () => {
+    it('should create a Dimension instance with valid length, width, and height', () => {
+      const dimension = new Dimension(10, 5, 2);
+      expect(dimension).toBeDefined();
+    });
+
+    it('should throw an error for non-positive length, width, or height', () => {
+      expect(() => new Dimension(0, 5, 2)).toThrow();
+      expect(() => new Dimension(10, -5, 2)).toThrow();
+      expect(() => new Dimension(10, 5, 0)).toThrow();
+    });
+  });
+
+  describe('equals', () => {
+    it('should return true when comparing two Dimension instances with the same length, width, and height', () => {
+      const dimension1 = new Dimension(10, 5, 2);
+      const dimension2 = new Dimension(10, 5, 2);
+      expect(dimension1.equals(dimension2)).toBe(true);
+    });
+
+    it('should return false when comparing two Dimension instances with different length, width, or height', () => {
+      const dimension1 = new Dimension(10, 5, 2);
+      const dimension2 = new Dimension(5, 10, 2);
+      expect(dimension1.equals(dimension2)).toBe(false);
+    });
+  });
+
+  describe('toString', () => {
+    it 'should return the string representation of the Dimension', () => {
+      const dimension = new Dimension(10, 5, 2);
+      expect(dimension.toString()).toBe('Length: 10cm, Width: 5cm, Height: 2cm');
+    });
+  });
+});
+```

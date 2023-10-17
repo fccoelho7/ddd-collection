@@ -1,0 +1,87 @@
+# Duration
+
+```ts copy
+class Duration {
+  private hours: number;
+  private minutes: number;
+  private seconds: number;
+
+  constructor(hours: number, minutes: number, seconds: number) {
+    if (
+      hours < 0 ||
+      minutes < 0 ||
+      minutes >= 60 ||
+      seconds < 0 ||
+      seconds >= 60
+    ) {
+      throw new Error(
+        "Invalid duration. Hours, minutes, and seconds should be non-negative and within their respective ranges."
+      );
+    }
+    this.hours = hours;
+    this.minutes = minutes;
+    this.seconds = seconds;
+  }
+
+  equals(other: Duration): boolean {
+    return (
+      this.hours === other.hours &&
+      this.minutes === other.minutes &&
+      this.seconds === other.seconds
+    );
+  }
+
+  toString(): string {
+    return `${this.hours}h ${this.minutes}m ${this.seconds}s`;
+  }
+}
+
+export { Duration };
+```
+
+## Specs
+
+```ts copy
+import { Duration } from "./Duration"; // Adjust the import path as per your project structure
+
+describe("Duration", () => {
+  describe("constructor", () => {
+    it("should create a Duration instance with valid hours, minutes, and seconds", () => {
+      const duration = new Duration(1, 30, 45);
+      expect(duration).toBeDefined();
+    });
+
+    it("should throw an error for negative hours, minutes, or seconds", () => {
+      expect(() => new Duration(-1, 30, 45)).toThrow();
+      expect(() => new Duration(1, -30, 45)).toThrow();
+      expect(() => new Duration(1, 30, -45)).toThrow();
+    });
+
+    it("should throw an error for minutes or seconds out of range", () => {
+      expect(() => new Duration(1, 60, 45)).toThrow();
+      expect(() => new Duration(1, 30, 60)).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Duration instances with the same hours, minutes, and seconds", () => {
+      const duration1 = new Duration(2, 15, 30);
+      const duration2 = new Duration(2, 15, 30);
+      expect(duration1.equals(duration2)).toBe(true);
+    });
+
+    it("should return false when comparing two Duration instances with different hours, minutes, or seconds", () => {
+      const duration1 = new Duration(2, 15, 30);
+      const duration2 = new Duration(1, 30, 45);
+      expect(duration1.equals(duration2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Duration", () => {
+      const duration = new Duration(2, 15, 30);
+      expect(duration.toString()).toBe("2h 15m 30s");
+    });
+  });
+});
+```

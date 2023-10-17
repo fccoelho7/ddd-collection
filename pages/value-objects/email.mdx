@@ -1,0 +1,77 @@
+# Email
+
+```ts copy
+class Email {
+  private address: string;
+
+  constructor(address: string) {
+    if (!this.isValidEmail(address)) {
+      throw new Error(
+        "Invalid email address. Please provide a valid email address."
+      );
+    }
+    this.address = address;
+  }
+
+  equals(other: Email): boolean {
+    return this.address === other.address;
+  }
+
+  toString(): string {
+    return this.address;
+  }
+
+  private isValidEmail(email: string): boolean {
+    // This is a basic email validation. You can use a more comprehensive regular expression for production use.
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+}
+
+// Example usage:
+const validEmail = new Email("john.doe@example.com");
+const invalidEmail = new Email("invalid_email");
+
+console.log(validEmail.toString()); // Output: "john.doe@example.com"
+console.log(invalidEmail.toString()); // Throws an error for an invalid email
+```
+
+## Specs
+
+```ts copy
+// Import the Email class (assuming it's in a separate file)
+import { Email } from "./email";
+
+describe("Email", () => {
+  describe("constructor", () => {
+    it("should create an Email instance with a valid email address", () => {
+      expect(() => new Email("john.doe@example.com")).not.toThrow();
+    });
+
+    it("should throw an error for an invalid email address", () => {
+      expect(() => new Email("invalid_email")).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Email instances with the same address", () => {
+      const email1 = new Email("john.doe@example.com");
+      const email2 = new Email("john.doe@example.com");
+      expect(email1.equals(email2)).toBe(true);
+    });
+
+    it("should return false when comparing two Email instances with different addresses", () => {
+      const email1 = new Email("john.doe@example.com");
+      const email2 = new Email("jane.smith@example.com");
+      expect(email1.equals(email2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Email", () => {
+      const email = new Email("john.doe@example.com");
+      expect(email.toString()).toBe("john.doe@example.com");
+    });
+  });
+});
+```

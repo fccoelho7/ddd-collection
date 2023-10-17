@@ -1,0 +1,77 @@
+# Phone Number
+
+```ts copy
+class PhoneNumber {
+  private number: string;
+
+  constructor(number: string) {
+    if (!this.isValidPhoneNumber(number)) {
+      throw new Error(
+        "Invalid phone number. Please provide a valid phone number."
+      );
+    }
+    this.number = number;
+  }
+
+  equals(other: PhoneNumber): boolean {
+    return this.number === other.number;
+  }
+
+  toString(): string {
+    return this.number;
+  }
+
+  private isValidPhoneNumber(number: string): boolean {
+    // This is a basic phone number validation. You can adapt it to your specific requirements.
+    const phoneRegex = /^\d{10}$/; // For a 10-digit phone number
+    return phoneRegex.test(number);
+  }
+}
+
+// Example usage:
+const validPhoneNumber = new PhoneNumber("1234567890");
+const invalidPhoneNumber = new PhoneNumber("invalid_phone_number");
+
+console.log(validPhoneNumber.toString()); // Output: "1234567890"
+console.log(invalidPhoneNumber.toString()); // Throws an error for an invalid phone number
+```
+
+## Specs
+
+```ts copy
+// Import the PhoneNumber class (assuming it's in a separate file)
+import { PhoneNumber } from "./phoneNumber";
+
+describe("PhoneNumber", () => {
+  describe("constructor", () => {
+    it("should create a PhoneNumber instance with a valid phone number", () => {
+      expect(() => new PhoneNumber("1234567890")).not.toThrow();
+    });
+
+    it("should throw an error for an invalid phone number", () => {
+      expect(() => new PhoneNumber("invalid_phone_number")).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two PhoneNumber instances with the same number", () => {
+      const phoneNumber1 = new PhoneNumber("1234567890");
+      const phoneNumber2 = new PhoneNumber("1234567890");
+      expect(phoneNumber1.equals(phoneNumber2)).toBe(true);
+    });
+
+    it("should return false when comparing two PhoneNumber instances with different numbers", () => {
+      const phoneNumber1 = new PhoneNumber("1234567890");
+      const phoneNumber2 = new PhoneNumber("9876543210");
+      expect(phoneNumber1.equals(phoneNumber2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the PhoneNumber", () => {
+      const phoneNumber = new PhoneNumber("1234567890");
+      expect(phoneNumber.toString()).toBe("1234567890");
+    });
+  });
+});
+```

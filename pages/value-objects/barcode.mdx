@@ -1,0 +1,71 @@
+# Barcode
+
+```ts copy
+class Barcode {
+  private value: string;
+
+  constructor(value: string) {
+    if (!this.isValidBarcode(value)) {
+      throw new Error("Invalid barcode value. Please provide a valid barcode.");
+    }
+    this.value = value;
+  }
+
+  equals(other: Barcode): boolean {
+    return this.value === other.value;
+  }
+
+  toString(): string {
+    return this.value;
+  }
+
+  private isValidBarcode(value: string): boolean {
+    // You can implement your barcode validation logic here.
+    // For simplicity, we're not checking the barcode format in this example.
+    // In a real application, you might use a specific pattern or library to validate barcodes.
+    return true;
+  }
+}
+
+export { Barcode };
+```
+
+## Specs
+
+```ts copy
+import { Barcode } from "./Barcode"; // Adjust the import path as per your project structure
+
+describe("Barcode", () => {
+  describe("constructor", () => {
+    it("should create a Barcode instance with a valid barcode value", () => {
+      const barcode = new Barcode("1234567890");
+      expect(barcode).toBeDefined();
+    });
+
+    it("should throw an error for an invalid barcode value", () => {
+      expect(() => new Barcode("invalid_barcode")).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Barcode instances with the same barcode value", () => {
+      const barcode1 = new Barcode("1234567890");
+      const barcode2 = new Barcode("1234567890");
+      expect(barcode1.equals(barcode2)).toBe(true);
+    });
+
+    it("should return false when comparing two Barcode instances with different barcode values", () => {
+      const barcode1 = new Barcode("1234567890");
+      const barcode2 = new Barcode("0987654321");
+      expect(barcode1.equals(barcode2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Barcode", () => {
+      const barcode = new Barcode("1234567890");
+      expect(barcode.toString()).toBe("1234567890");
+    });
+  });
+});
+```

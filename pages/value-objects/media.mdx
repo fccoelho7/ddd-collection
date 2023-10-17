@@ -1,0 +1,95 @@
+# Media
+
+```ts copy
+class Media {
+  private url: string;
+  private type: string;
+
+  constructor(url: string, type: string) {
+    if (!this.isValidMediaType(type)) {
+      throw new Error("Invalid media type. Please provide a valid media type.");
+    }
+    this.url = url;
+    this.type = type;
+  }
+
+  equals(other: Media): boolean {
+    return this.url === other.url && this.type === other.type;
+  }
+
+  toString(): string {
+    return `Media: ${this.type} - URL: ${this.url}`;
+  }
+
+  private isValidMediaType(type: string): boolean {
+    // You can implement your media type validation logic here.
+    // For simplicity, we're not checking the type format in this example.
+    // In a real application, you might use a specific set of valid media types.
+    return true;
+  }
+}
+
+export { Media };
+```
+
+## Specs
+
+```ts copy
+import { Media } from "./Media"; // Adjust the import path as per your project structure
+
+describe("Media", () => {
+  describe("constructor", () => {
+    it("should create a Media instance with a valid URL and media type", () => {
+      const media = new Media(
+        "https://www.example.com/image.jpg",
+        "image/jpeg"
+      );
+      expect(media).toBeDefined();
+    });
+
+    it("should throw an error for an invalid media type", () => {
+      expect(
+        () => new Media("https://www.example.com/audio.mp3", "invalid_type")
+      ).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Media instances with the same URL and media type", () => {
+      const media1 = new Media(
+        "https://www.example.com/image.jpg",
+        "image/jpeg"
+      );
+      const media2 = new Media(
+        "https://www.example.com/image.jpg",
+        "image/jpeg"
+      );
+      expect(media1.equals(media2)).toBe(true);
+    });
+
+    it("should return false when comparing two Media instances with different URL or media type", () => {
+      const media1 = new Media(
+        "https://www.example.com/image.jpg",
+        "image/jpeg"
+      );
+      const media2 = new Media(
+        "https://www.example.com/audio.mp3",
+        "audio/mpeg"
+      );
+      expect(media1.equals(media2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Media", () => {
+      const media = new Media(
+        "https://www.example.com/image.jpg",
+        "image/jpeg"
+      );
+      expect(media.toString()).toBe(
+        "Media: image/jpeg - URL: https://www.example.com/image.jpg"
+      );
+    });
+  });
+});
+```

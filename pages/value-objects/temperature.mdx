@@ -1,0 +1,122 @@
+# Temperature
+
+```ts copy
+class Temperature {
+  private celsius: number | undefined;
+  private fahrenheit: number | undefined;
+
+  constructor(celsius?: number, fahrenheit?: number) {
+    if (celsius !== undefined) {
+      if (celsius < -273.15) {
+        throw new Error(
+          "Invalid temperature. Celsius temperature should be above absolute zero."
+        );
+      }
+      this.celsius = celsius;
+      this.fahrenheit = this.celsiusToFahrenheit(celsius);
+    } else if (fahrenheit !== undefined) {
+      if (fahrenheit < -459.67) {
+        throw new Error(
+          "Invalid temperature. Fahrenheit temperature should be above absolute zero."
+        );
+      }
+      this.fahrenheit = fahrenheit;
+      this.celsius = this.fahrenheitToCelsius(fahrenheit);
+    } else {
+      throw new Error(
+        "Please provide either Celsius or Fahrenheit temperature."
+      );
+    }
+  }
+
+  private celsiusToFahrenheit(celsius: number): number {
+    return (celsius * 9) / 5 + 32;
+  }
+
+  private fahrenheitToCelsius(fahrenheit: number): number {
+    return ((fahrenheit - 32) * 5) / 9;
+  }
+
+  equals(other: Temperature): boolean {
+    return (
+      this.celsius === other.celsius && this.fahrenheit === other.fahrenheit
+    );
+  }
+
+  toString(): string {
+    return `${this.celsius}°C (${this.fahrenheit}°F)`;
+  }
+
+  toCelsius(): number {
+    return this.celsius as number;
+  }
+
+  toFahrenheit(): number {
+    return this.fahrenheit as number;
+  }
+}
+
+export { Temperature };
+```
+
+## Specs
+
+```ts copy
+import { Temperature } from "./Temperature"; // Adjust the import path as per your project structure
+
+describe("Temperature", () => {
+  describe("constructor", () => {
+    it("should create a Temperature instance with valid Celsius and Fahrenheit values", () => {
+      const temperature1 = new Temperature(25); // Celsius
+      const temperature2 = new Temperature(undefined, 77); // Fahrenheit
+      expect(temperature1).toBeDefined();
+      expect(temperature2).toBeDefined();
+    });
+
+    it("should throw an error for invalid Celsius and Fahrenheit values", () => {
+      // Below absolute zero for both units
+      expect(() => new Temperature(-300)).toThrow();
+      expect(() => new Temperature(undefined, -500)).toThrow();
+    });
+
+    it("should throw an error when no temperature is provided", () => {
+      expect(() => new Temperature()).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Temperature instances with the same Celsius and Fahrenheit values", () => {
+      const temperature1 = new Temperature(25);
+      const temperature2 = new Temperature(undefined, 77);
+      expect(temperature1.equals(temperature2)).toBe(true);
+    });
+
+    it("should return false when comparing two Temperature instances with different Celsius or Fahrenheit values", () => {
+      const temperature1 = new Temperature(25);
+      const temperature2 = new Temperature(undefined, 86);
+      expect(temperature1.equals(temperature2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Temperature in Celsius and Fahrenheit", () => {
+      const temperature = new Temperature(25);
+      expect(temperature.toString()).toBe("25°C (77°F)");
+    });
+  });
+
+  describe("toCelsius", () => {
+    it("should return the temperature in Celsius", () => {
+      const temperature = new Temperature(undefined, 77);
+      expect(temperature.toCelsius()).toBe(25);
+    });
+  });
+
+  describe("toFahrenheit", () => {
+    it("should return the temperature in Fahrenheit", () => {
+      const temperature = new Temperature(25);
+      expect(temperature.toFahrenheit()).toBe(77);
+    });
+  });
+});
+```

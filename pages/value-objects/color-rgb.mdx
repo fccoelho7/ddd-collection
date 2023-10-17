@@ -1,0 +1,88 @@
+# ColorRGB
+
+```ts copy
+class ColorRGB {
+  private red: number;
+  private green: number;
+  private blue: number;
+
+  constructor(red: number, green: number, blue: number) {
+    if (
+      red < 0 ||
+      red > 255 ||
+      green < 0 ||
+      green > 255 ||
+      blue < 0 ||
+      blue > 255
+    ) {
+      throw new Error(
+        "Invalid color components. Red, green, and blue values should be between 0 and 255."
+      );
+    }
+    this.red = red;
+    this.green = green;
+    this.blue = blue;
+  }
+
+  equals(other: Color): boolean {
+    return (
+      this.red === other.red &&
+      this.green === other.green &&
+      this.blue === other.blue
+    );
+  }
+
+  toString(): string {
+    return `rgb(${this.red}, ${this.green}, ${this.blue})`;
+  }
+}
+
+// Example usage:
+const color1 = new ColorRGB(255, 0, 0); // Red
+const color2 = new ColorRGB(0, 128, 255); // Blue
+
+console.log(color1.toString()); // Output: "rgb(255, 0, 0)"
+console.log(color2.toString()); // Output: "rgb(0, 128, 255)"
+```
+
+## Specs
+
+```ts copy
+import { Color } from "./color"; // Import the Color class
+
+describe("Color", () => {
+  describe("constructor", () => {
+    it("should create a Color instance with valid red, green, and blue values", () => {
+      const color = new ColorRGB(255, 0, 0);
+      expect(color).toBeDefined();
+    });
+
+    it("should throw an error for out-of-range red, green, or blue values", () => {
+      expect(() => new ColorRGB(256, 0, 0)).toThrow();
+      expect(() => new ColorRGB(0, 256, 0)).toThrow();
+      expect(() => new ColorRGB(0, 0, 256)).toThrow();
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true when comparing two Color instances with the same red, green, and blue values", () => {
+      const color1 = new ColorRGB(255, 0, 0);
+      const color2 = new ColorRGB(255, 0, 0);
+      expect(color1.equals(color2)).toBe(true);
+    });
+
+    it("should return false when comparing two Color instances with different red, green, and blue values", () => {
+      const color1 = new ColorRGB(255, 0, 0);
+      const color2 = new ColorRGB(0, 128, 255);
+      expect(color1.equals(color2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of the Color in the RGB format", () => {
+      const color = new ColorRGB(255, 0, 0);
+      expect(color.toString()).toBe("rgb(255, 0, 0)");
+    });
+  });
+});
+```
