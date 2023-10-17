@@ -1,8 +1,8 @@
 {
   "index": "Introduction",
-  "aggregate": "Aggregate",
-  "entity": "Entity",
   "value-objects": "Value Objects",
+  "entities": "Entities",
+  "aggregates": "Aggregates",
   "contact": {
     "title": "Contact ↗",
     "type": "page",

@@ -1,0 +1,107 @@
+# Specifications
+
+In DDD, specifications are a formal and declarative way to define the rules and constraints that apply to certain objects or entities within the domain. Specifications help to clarify and document these rules, ensuring that they are both well-understood and consistently enforced throughout the software.
+
+Specifications serve various purposes, including:
+
+- **Validation**: They can be used to validate whether an object meets specific criteria or constraints.
+- **Querying**: They can be used to query a repository for objects that meet specific criteria.
+- **Business Logic**: They capture and encapsulate complex business rules or conditions.
+- **Testing**: Specifications can be used in tests to ensure that objects behave according to defined criteria.
+
+## Specification Pattern
+
+```ts copy
+abstract class Specification<T> {
+  abstract isSatisfiedBy(candidate: T): boolean;
+
+  // Logical AND operator to combine two specifications.
+  and(other: Specification<T>): Specification<T> {
+    return new AndSpecification(this, other);
+  }
+
+  // Logical OR operator to combine two specifications.
+  or(other: Specification<T>): Specification<T> {
+    return new OrSpecification(this, other);
+  }
+
+  // Logical NOT operator to negate a specification.
+  not(): Specification<T> {
+    return new NotSpecification(this);
+  }
+}
+
+// Concrete AndSpecification class.
+class AndSpecification<T> extends Specification<T> {
+  constructor(private left: Specification<T>, private right: Specification<T>) {
+    super();
+  }
+
+  isSatisfiedBy(candidate: T): boolean {
+    return (
+      this.left.isSatisfiedBy(candidate) && this.right.isSatisfiedBy(candidate)
+    );
+  }
+}
+
+// Concrete OrSpecification class.
+class OrSpecification<T> extends Specification<T> {
+  constructor(private left: Specification<T>, private right: Specification<T>) {
+    super();
+  }
+
+  isSatisfiedBy(candidate: T): boolean {
+    return (
+      this.left.isSatisfiedBy(candidate) || this.right.isSatisfiedBy(candidate)
+    );
+  }
+}
+
+// Concrete NotSpecification class.
+class NotSpecification<T> extends Specification<T> {
+  constructor(private spec: Specification<T>) {
+    super();
+  }
+
+  isSatisfiedBy(candidate: T): boolean {
+    return !this.spec.isSatisfiedBy(candidate);
+  }
+}
+```
+
+## Applying Specifications
+
+```ts copy
+// Create concrete specifications.
+class PriceGreaterThan100Specification extends Specification<Product> {
+  isSatisfiedBy(product: Product): boolean {
+    return product.price > 100;
+  }
+}
+
+class InStockSpecification extends Specification<Product> {
+  isSatisfiedBy(product: Product): boolean {
+    return product.inStock;
+  }
+}
+
+// Combine specifications using AND, OR, and NOT operators.
+const priceGreaterThan100 = new PriceGreaterThan100Specification();
+const inStock = new InStockSpecification();
+
+// Using AND operator
+const expensiveAndInStock = priceGreaterThan100.and(inStock);
+
+// Using OR operator
+const priceGreaterThan100OrInStock = priceGreaterThan100.or(inStock);
+
+// Using NOT operator
+const notExpensive = priceGreaterThan100.not();
+
+const products: Product[] = /* Load products from a repository or API */;
+
+// Using the combined specifications
+const expensiveAndInStockProducts = products.filter(product => expensiveAndInStock.isSatisfiedBy(product));
+const priceGreaterThan100OrInStockProducts = products.filter(product => priceGreaterThan100OrInStock.isSatisfiedBy(product));
+const notExpensiveProducts = products.filter(product => notExpensive.isSatisfiedBy(product));
+```

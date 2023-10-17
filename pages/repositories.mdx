@@ -1,0 +1,87 @@
+# Repositories
+
+In Domain-Driven Design (DDD), a repository serves as a crucial pattern for handling domain object collection, retrieval, and storage. It provides an abstract, domain-focused interface, separating data access concerns from domain logic. Key repository characteristics in DDD:
+
+1. **Aggregation of Data Access Logic:** Repositories consolidate data access logic, simplifying how domain objects interact with data stores (e.g., databases).
+
+2. **Abstraction:** They abstract data storage details, enabling interaction with domain objects without worrying about data retrieval or persistence specifics.
+
+3. **Domain-Centric Interface:** Repositories offer domain-specific methods (e.g., findById, save) that align with domain needs.
+
+4. **Querying and Filtering:** Repositories support querying and filtering, facilitating complex data retrieval based on specific criteria.
+
+5. **Data Store Independence:** Repositories can adapt to various data stores, allowing technology switches without affecting domain logic.
+
+6. **Aggregates:** Repositories are commonly associated with aggregates, managing the retrieval and persistence of entire aggregates to maintain consistency.
+
+**Example:**
+In an e-commerce app, you might create a Product repository. It offers methods to retrieve products by ID, filter products by criteria (e.g., category), and perform save or delete operations. The repository abstracts data storage details, be it a relational database, NoSQL store, or another source.
+
+In summary, a DDD repository acts as a bridge between domain logic and data access, enhancing code maintainability and domain focus by adhering to DDD principles and separation of concerns.
+
+## Example
+
+```ts copy
+// Define an entity representing an item in your domain.
+class Item {
+  constructor(public id: string, public name: string) {}
+}
+
+// Define a repository interface for managing items.
+interface ItemRepository {
+  findById(id: string): Item | undefined;
+  save(item: Item): void;
+  remove(item: Item): void;
+}
+
+// Create a concrete implementation of the repository.
+class InMemoryItemRepository implements ItemRepository {
+  private items: Item[] = [];
+
+  findById(id: string): Item | undefined {
+    return this.items.find((item) => item.id === id);
+  }
+
+  save(item: Item): void {
+    // Check if the item already exists and update it, or add it if it's a new item.
+    const existingItemIndex = this.items.findIndex(
+      (existingItem) => existingItem.id === item.id
+    );
+    if (existingItemIndex !== -1) {
+      this.items[existingItemIndex] = item;
+    } else {
+      this.items.push(item);
+    }
+  }
+
+  remove(item: Item): void {
+    const index = this.items.findIndex(
+      (existingItem) => existingItem.id === item.id
+    );
+    if (index !== -1) {
+      this.items.splice(index, 1);
+    }
+  }
+}
+
+// Usage
+const itemRepository: ItemRepository = new InMemoryItemRepository();
+
+const item1 = new Item("1", "Item 1");
+const item2 = new Item("2", "Item 2");
+
+// Save items to the repository
+itemRepository.save(item1);
+itemRepository.save(item2);
+
+// Retrieve an item from the repository
+const retrievedItem = itemRepository.findById("1");
+console.log(retrievedItem);
+
+// Remove an item from the repository
+itemRepository.remove(item2);
+
+// Verify the item is removed
+const removedItem = itemRepository.findById("2");
+console.log(removedItem); // This should be undefined
+```

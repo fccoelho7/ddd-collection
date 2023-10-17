@@ -1,0 +1,17 @@
+# Value Objects
+
+A "value object" is a fundamental component for modeling a software application's domain. Key characteristics in DDD:
+
+1. **Immutability**: Value objects are unchangeable; any modification creates a new instance with updated values.
+
+2. **Equality**: Their equality is determined by attribute values; identical attributes mean equality.
+
+3. **No Identity**: Value objects lack unique identifiers, serving solely to provide value through attributes.
+
+4. **Composition**: They often represent complex data structures within entities or other value objects, comprising multiple attributes.
+
+5. **Lightweight**: Being identity-free and immutable makes value objects lightweight, easy to share, and reuse.
+
+Examples include date/time, money, coordinates, measurements, color, and addresses.
+
+In DDD, value objects enhance domain modeling, code clarity, maintainability, and data consistency, offering strong typing to prevent invalid data-related bugs.

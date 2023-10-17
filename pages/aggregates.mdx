@@ -1,0 +1,98 @@
+# Aggregates
+
+Aggregates are fundamental in Domain-Driven Design (DDD), serving as a way to group related entities and value objects into a single unit of consistency. Key points to note:
+
+1. **Consistency Boundary**: Aggregates establish boundaries for maintaining data integrity, ensuring changes adhere to defined rules.
+
+2. **Root Entity**: Each aggregate has a root entity for external interaction, coordinating operations and enforcing invariants.
+
+3. **Entities and Value Objects**: Aggregates consist of entities (with identity) and value objects (without identity) that collaborate for consistency.
+
+4. **Transactional Boundaries**: Aggregates often serve as transactional boundaries, ensuring all changes are in a single transaction.
+
+5. **Direct Access**: Clients access and modify aggregates exclusively through the root entity.
+
+6. **Separation of Aggregates**: Different parts of the domain can be modeled as separate aggregates to minimize conflicts.
+
+7. **Consistency and Performance**: Aggregates balance consistency and performance by limiting scope.
+
+8. **Eventual Consistency**: Aggregates may not be real-time consistent but achieve it eventually through background processes.
+
+Aggregates simplify the management of complex business rules, ensuring data integrity in DDD. Careful boundary definition is essential for effective modeling and meeting application requirements.
+
+## Example
+
+```ts copy
+class OrderLineItem {
+  private _productId: string;
+  private _quantity: number;
+
+  constructor(productId: string, quantity: number) {
+    this._productId = productId;
+    this._quantity = quantity;
+  }
+
+  get productId(): string {
+    return this._productId;
+  }
+
+  get quantity(): number {
+    return this._quantity;
+  }
+}
+
+class Order {
+  private _orderId: string;
+  private _lineItems: OrderLineItem[] = [];
+
+  constructor(orderId: string) {
+    this._orderId = orderId;
+  }
+
+  get orderId(): string {
+    return this._orderId;
+  }
+
+  get lineItems(): OrderLineItem[] {
+    return this._lineItems;
+  }
+
+  // Method to add a line item to the order
+  addLineItem(productId: string, quantity: number) {
+    const existingLineItem = this._lineItems.find(
+      (item) => item.productId === productId
+    );
+    if (existingLineItem) {
+      existingLineItem._quantity += quantity;
+    } else {
+      const newLineItem = new OrderLineItem(productId, quantity);
+      this._lineItems.push(newLineItem);
+    }
+  }
+
+  // Method to calculate the total order amount
+  calculateTotalAmount(): number {
+    let total = 0;
+    for (const lineItem of this._lineItems) {
+      // In a real application, you would fetch product prices and calculate the total amount here.
+      // For simplicity, we'll assume a fixed price of $10 per product.
+      total += lineItem.quantity * 10;
+    }
+    return total;
+  }
+}
+
+// Example usage:
+const order = new Order("1");
+order.addLineItem("A123", 3);
+order.addLineItem("B456", 2);
+console.log(`Order ID: ${order.orderId}`);
+console.log("Line Items:");
+for (const lineItem of order.lineItems) {
+  console.log(
+    `Product ID: ${lineItem.productId}, Quantity: ${lineItem.quantity}`
+  );
+}
+const totalAmount = order.calculateTotalAmount();
+console.log(`Total Order Amount: $${totalAmount}`);
+```

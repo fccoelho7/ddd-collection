@@ -1,0 +1,75 @@
+# Entities
+
+Entities, central to Domain-Driven Design (DDD), represent core domain objects. Key characteristics:
+
+1. **Identity**: Entities have a unique identity, usually represented by an identifier, setting them apart from others.
+
+2. **Immutable**: Typically, entities are considered immutable after creation, although their state can change.
+
+3. **Behavior**: Entities can perform actions and encapsulate specific rules and logic.
+
+4. **Lifespan**: They exist, evolve, and eventually may be deleted or deactivated, tracked by their identity.
+
+5. **Relationships**: Entities can relate to other entities, aiding in modeling complex domain scenarios.
+
+6. **Persistence**: Entities often correspond to database records, with their identity used for mapping.
+
+7. **Aggregates**: In DDD, entities are grouped into aggregates, clusters of related entities and value objects, treated as a single unit for data changes, promoting data consistency.
+
+Entities provide a structured way to model core business concepts, fostering effective communication between developers and domain experts, and supporting complex software system design and implementation.
+
+## Example
+
+```ts copy
+class BaseEntity<T> {
+  private id: T;
+
+  constructor(id: T) {
+    this.id = id;
+  }
+
+  get id(): T {
+    return this.id;
+  }
+}
+
+interface User {
+  name: string;
+  email: string;
+}
+
+class User extends BaseEntity<User> {
+  private _name: string;
+  private _email: Email;
+
+  constructor(id: string, name: string, email: Email) {
+    super(id);
+    this._name = name;
+    this._email = email;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  set name(name: string) {
+    this._name = name;
+  }
+
+  get email(): Email {
+    return this._email;
+  }
+
+  set email(email: Email) {
+    this._email = email;
+  }
+
+  // You can add more methods and behavior specific to the User entity.
+}
+
+// Example usage:
+const user = new User("1", "John Doe", "john@example.com");
+console.log(`User ID: ${user.id}`);
+console.log(`User Name: ${user.name}`);
+console.log(`User Email: ${user.email}`);
+```
