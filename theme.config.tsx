@@ -13,7 +13,7 @@ const config: DocsThemeConfig = {
   // chat: {
   //   link: "https://discord.com",
   // },
-  docsRepositoryBase: "https://github.com/fccoelho7/ddd-collection",
+  docsRepositoryBase: "https://github.com/fccoelho7/ddd-collection/tree/main",
   useNextSeoProps() {
     return {
       titleTemplate: "%s – DDD Collection",
