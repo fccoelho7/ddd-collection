@@ -2,10 +2,10 @@
 
 ```ts copy
 class Coordinate {
-  private static LATITUDE_MIN_VALUE = -90;
-  private static LATITUDE_MAX_VALUE = 90;
-  private static LONGITUDE_MIN_VALUE = -180;
-  private static LONGITUDE_MAX_VALUE = 180;
+  private static readonly LATITUDE_MIN_VALUE = -90;
+  private static readonly LATITUDE_MAX_VALUE = 90;
+  private static readonly LONGITUDE_MIN_VALUE = -180;
+  private static readonly LONGITUDE_MAX_VALUE = 180;
 
   private latitude: number;
   private longitude: number;
@@ -60,62 +60,62 @@ class Coordinate {
 }
 
 // Example usage
-const coordinates = new Coordinates(40.7128, -74.006);
-console.log(coordinates.getLatitude()); // 40.7128
-console.log(coordinates.getLongitude()); // -74.006
-console.log(coordinates.toString()); // Latitude: 40.7128, Longitude: -74.006
+const coordinate = new Coordinate(40.7128, -74.006);
+console.log(coordinate.getLatitude()); // 40.7128
+console.log(coordinate.getLongitude()); // -74.006
+console.log(coordinate.toString()); // Latitude: 40.7128, Longitude: -74.006
 ```
 
 ## Specs
 
 ```ts copy
-import { Coordinates } from "./Coordinates"; // Import the Coordinates class
+import { Coordinate } from "./Coordinate"; // Import the Coordinate class
 
-describe("Coordinates", () => {
+describe("Coordinate", () => {
   describe("constructor", () => {
-    it("should create a valid Coordinates instance", () => {
-      const validCoordinates = new Coordinates(40.7128, -74.006);
+    it("should create a valid Coordinate instance", () => {
+      const validCoordinates = new Coordinate(40.7128, -74.006);
       expect(validCoordinates.getLatitude()).toBe("40.7128");
       expect(validCoordinates.getLongitude()).toBe("-74.006");
     });
 
     it("should throw an error for invalid coordinate values", () => {
-      expect(() => new Coordinates(NaN, -74.006)).toThrowError(
+      expect(() => new Coordinate(NaN, -74.006)).toThrowError(
         "Invalid coordinate values latitude=NaN, longitude=-74.006"
       );
     });
 
     it("should throw an error for invalid latitude value", () => {
-      expect(() => new Coordinates(91, -74.006)).toThrowError(
+      expect(() => new Coordinate(91, -74.006)).toThrowError(
         "Invalid latitude value: 91"
       );
     });
 
     it("should throw an error for invalid longitude value", () => {
-      expect(() => new Coordinates(40.7128, 190)).toThrowError(
+      expect(() => new Coordinate(40.7128, 190)).toThrowError(
         "Invalid longitude value: 190"
       );
     });
   });
 
   describe("equals", () => {
-    it("should return true for equal Coordinates instances", () => {
-      const coordinates1 = new Coordinates(40.7128, -74.006);
-      const coordinates2 = new Coordinates(40.7128, -74.006);
-      expect(coordinates1.equals(coordinates2)).toBe(true);
+    it("should return true for equal Coordinate instances", () => {
+      const coordinate1 = new Coordinate(40.7128, -74.006);
+      const coordinate2 = new Coordinate(40.7128, -74.006);
+      expect(coordinate1.equals(coordinate2)).toBe(true);
     });
 
-    it("should return false for different Coordinates instances", () => {
-      const coordinates1 = new Coordinates(40.7128, -74.006);
-      const coordinates2 = new Coordinates(34.0522, -118.2437);
-      expect(coordinates1.equals(coordinates2)).toBe(false);
+    it("should return false for different Coordinate instances", () => {
+      const coordinate1 = new Coordinate(40.7128, -74.006);
+      const coordinate2 = new Coordinate(34.0522, -118.2437);
+      expect(coordinate1.equals(coordinate2)).toBe(false);
     });
   });
 
   describe("toString", () => {
-    it("should return the string representation of Coordinates", () => {
-      const coordinates = new Coordinates(40.7128, -74.006);
-      expect(coordinates.toString()).toBe(
+    it("should return the string representation of Coordinate", () => {
+      const coordinate = new Coordinate(40.7128, -74.006);
+      expect(coordinate.toString()).toBe(
         "Latitude: 40.7128, Longitude: -74.006"
       );
     });
