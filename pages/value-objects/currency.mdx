@@ -1,0 +1,89 @@
+# Currency
+
+```ts copy
+interface CurrencyMap {
+  [key: string]: {
+    title: string;
+    symbol: string;
+  };
+}
+
+class Currency {
+  private value: string;
+  private currencyMap: CurrencyMap = {
+    EUR: {
+      title: "Euro",
+      symbol: "€",
+    },
+    CHF: {
+      title: "Swiss Franc",
+      symbol: "Fr",
+    },
+    USD: {
+      title: "US Dollar",
+      symbol: "$",
+    },
+    DKK: {
+      title: "Danish krone",
+      symbol: "kr",
+    },
+    NOK: {
+      title: "Norwegian krone",
+      symbol: "kr",
+    },
+    SEK: {
+      title: "Swedish krona",
+      symbol: "kr",
+    },
+    GBP: {
+      title: "British Pound",
+      symbol: "£",
+    },
+  };
+
+  constructor(value: string) {
+    if (!this.currencyMap[value]) {
+      throw new Error(`Currency ${value} is not supported`);
+    }
+    this.value = value;
+  }
+
+  getValue(): string {
+    return this.value;
+  }
+
+  getTitle(): string {
+    return this.currencyMap[this.value].title;
+  }
+
+  getSymbol(): string {
+    return this.currencyMap[this.value].symbol;
+  }
+}
+
+// Example usage
+const currency = new Currency("EUR");
+console.log(currency.getTitle()); // Euro
+console.log(currency.getSymbol()); // €
+```
+
+## Specs
+
+```ts copy
+import { Currency } from "./Currency";
+
+describe("Currency", () => {
+  it("should throw if invalid currency", () => {
+    expect(() => {
+      new Currency("INVALID");
+    }).toThrow("Currency INVALID is not supported");
+  });
+
+  it("should create a valid currency instance", () => {
+    const currency = new Currency("USD");
+    expect(currency.getValue()).toBe("USD");
+    expect(currency.getTitle()).toBe("US Dollar");
+    expect(currency.getSymbol()).toBe("$");
+  });
+});
+```

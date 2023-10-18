@@ -29,7 +29,19 @@ class Language {
   }
 }
 
-export { Language };
+// Example usage
+const language = new Language("en-US");
+
+// You can also use the Language class as a type
+function greet(language: Language): string {
+  if (language.equals(new Language("en-US"))) {
+    return "Hello!";
+  } else if (language.equals(new Language("fr-FR"))) {
+    return "Bonjour!";
+  } else {
+    return "Hola!";
+  }
+}
 ```
 
 ## Specs

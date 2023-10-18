@@ -18,9 +18,9 @@ class Money {
     return `${this.amount} ${this.currency}`;
   }
 
-  add(other: Money): Money {
+  sum(other: Money): Money {
     if (this.currency !== other.currency) {
-      throw new Error("Cannot add money in different currencies");
+      throw new Error("Cannot sum money in different currencies");
     }
     return new Money(this.amount + other.amount, this.currency);
   }
@@ -36,12 +36,9 @@ class Money {
 // Example usage:
 const money1 = new Money(100, "USD");
 const money2 = new Money(50, "USD");
-
 console.log(money1.toString()); // Output: "100 USD"
-
-const result = money1.add(money2);
+const result = money1.sum(money2);
 console.log(result.toString()); // Output: "150 USD"
-
 const result2 = money1.subtract(money2);
 console.log(result2.toString()); // Output: "50 USD"
 ```
@@ -94,18 +91,18 @@ describe("Money", () => {
     });
   });
 
-  describe("add", () => {
-    it("should correctly add two Money instances with the same currency", () => {
+  describe("sum", () => {
+    it("should correctly sum two Money instances with the same currency", () => {
       const money1 = new Money(100, "USD");
       const money2 = new Money(50, "USD");
-      const result = money1.add(money2);
+      const result = money1.sum(money2);
       expect(result.toString()).toBe("150 USD");
     });
 
-    it("should throw an error when trying to add Money instances with different currencies", () => {
+    it("should throw an error when trying to sum Money instances with different currencies", () => {
       const money1 = new Money(100, "USD");
       const money2 = new Money(50, "EUR");
-      expect(() => money1.add(money2)).toThrow();
+      expect(() => money1.sum(money2)).toThrow();
     });
   });
 

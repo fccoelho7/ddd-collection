@@ -27,7 +27,11 @@ class DateRange {
   }
 }
 
-export { DateRange };
+// Example usage
+const startDate = new Date("2023-01-01");
+const endDate = new Date("2023-12-31");
+const dateRange = new DateRange(startDate, endDate);
+console.log(dateRange.toString()); // Start Date: 2023-01-01T00:00:00.000Z, End Date: 2023-12-31T00:00:00.000Z
 ```
 
 ## Specs

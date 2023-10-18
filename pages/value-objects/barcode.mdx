@@ -27,7 +27,11 @@ class Barcode {
   }
 }
 
-export { Barcode };
+// Example usage
+const barcode1 = new Barcode("1234567890");
+const barcode2 = new Barcode("1234567890");
+console.log(barcode1.equals(barcode2)); // true
+console.log(barcode1.toString()); // 1234567890
 ```
 
 ## Specs

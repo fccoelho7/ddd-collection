@@ -30,7 +30,11 @@ class Dimension {
   }
 }
 
-export { Dimension };
+// Example usage
+const dimension1 = new Dimension(10, 5, 2);
+const dimension2 = new Dimension(10, 5, 2);
+console.log(dimension1.equals(dimension2)); // true
+console.log(dimension1.toString()); // Length: 10cm, Width: 5cm, Height: 2cm
 ```
 
 ## Specs

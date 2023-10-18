@@ -1,0 +1,124 @@
+# Coordinate
+
+```ts copy
+class Coordinate {
+  private static LATITUDE_MIN_VALUE = -90;
+  private static LATITUDE_MAX_VALUE = 90;
+  private static LONGITUDE_MIN_VALUE = -180;
+  private static LONGITUDE_MAX_VALUE = 180;
+
+  private latitude: number;
+  private longitude: number;
+
+  constructor(latitude: number, longitude: number) {
+    if (isNaN(latitude) || isNaN(longitude)) {
+      throw new Error(
+        `Invalid coordinate values: latitude=${latitude}, longitude=${longitude}`
+      );
+    }
+    if (!this.isValidLatitude(latitude)) {
+      throw new Error(`Invalid latitude value: ${latitude}`);
+    }
+    if (!this.isValidLongitude(longitude)) {
+      throw new Error(`Invalid longitude value: ${longitude}`);
+    }
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
+
+  getLatitude(): string {
+    return this.latitude.toString();
+  }
+
+  getLongitude(): string {
+    return this.longitude.toString();
+  }
+
+  private isValidLatitude(latitude: number): boolean {
+    return (
+      latitude >= Coordinate.LATITUDE_MIN_VALUE &&
+      latitude <= Coordinate.LATITUDE_MAX_VALUE
+    );
+  }
+
+  private isValidLongitude(longitude: number): boolean {
+    return (
+      longitude >= Coordinate.LONGITUDE_MIN_VALUE &&
+      longitude <= Coordinate.LONGITUDE_MAX_VALUE
+    );
+  }
+
+  equals(other: GeoCoordinates): boolean {
+    return (
+      this.latitude === other.latitude && this.longitude === other.longitude
+    );
+  }
+
+  toString(): string {
+    return `Latitude: ${this.latitude}, Longitude: ${this.longitude}`;
+  }
+}
+
+// Example usage
+const coordinates = new Coordinates(40.7128, -74.006);
+console.log(coordinates.getLatitude()); // 40.7128
+console.log(coordinates.getLongitude()); // -74.006
+console.log(coordinates.toString()); // Latitude: 40.7128, Longitude: -74.006
+```
+
+## Specs
+
+```ts copy
+import { Coordinates } from "./Coordinates"; // Import the Coordinates class
+
+describe("Coordinates", () => {
+  describe("constructor", () => {
+    it("should create a valid Coordinates instance", () => {
+      const validCoordinates = new Coordinates(40.7128, -74.006);
+      expect(validCoordinates.getLatitude()).toBe("40.7128");
+      expect(validCoordinates.getLongitude()).toBe("-74.006");
+    });
+
+    it("should throw an error for invalid coordinate values", () => {
+      expect(() => new Coordinates(NaN, -74.006)).toThrowError(
+        "Invalid coordinate values latitude=NaN, longitude=-74.006"
+      );
+    });
+
+    it("should throw an error for invalid latitude value", () => {
+      expect(() => new Coordinates(91, -74.006)).toThrowError(
+        "Invalid latitude value: 91"
+      );
+    });
+
+    it("should throw an error for invalid longitude value", () => {
+      expect(() => new Coordinates(40.7128, 190)).toThrowError(
+        "Invalid longitude value: 190"
+      );
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true for equal Coordinates instances", () => {
+      const coordinates1 = new Coordinates(40.7128, -74.006);
+      const coordinates2 = new Coordinates(40.7128, -74.006);
+      expect(coordinates1.equals(coordinates2)).toBe(true);
+    });
+
+    it("should return false for different Coordinates instances", () => {
+      const coordinates1 = new Coordinates(40.7128, -74.006);
+      const coordinates2 = new Coordinates(34.0522, -118.2437);
+      expect(coordinates1.equals(coordinates2)).toBe(false);
+    });
+  });
+
+  describe("toString", () => {
+    it("should return the string representation of Coordinates", () => {
+      const coordinates = new Coordinates(40.7128, -74.006);
+      expect(coordinates.toString()).toBe(
+        "Latitude: 40.7128, Longitude: -74.006"
+      );
+    });
+  });
+});
+```

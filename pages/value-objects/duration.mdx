@@ -36,7 +36,11 @@ class Duration {
   }
 }
 
-export { Duration };
+// Example usage
+const duration1 = new Duration(1, 30, 45);
+const duration2 = new Duration(1, 30, 45);
+console.log(duration1.equals(duration2)); // true
+console.log(duration1.toString()); // 1h 30m 45s
 ```
 
 ## Specs

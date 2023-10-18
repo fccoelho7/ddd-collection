@@ -56,7 +56,11 @@ class Temperature {
   }
 }
 
-export { Temperature };
+// Example usage
+const temp1 = new Temperature(0, 32);
+const temp2 = new Temperature(100);
+console.log(temp1.equals(temp2)); // false
+console.log(temp2.equals(temp3)); // true
 ```
 
 ## Specs

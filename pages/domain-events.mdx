@@ -1,0 +1,81 @@
+# Domain Events
+
+Domain events capture significant state changes or occurrences in your software's domain. Key points:
+
+- **Representation of Real-World Events:** They mirror real-world changes in your domain, preserving the history of what happened.
+
+- **Immutable:** Domain events are typically unchangeable once created.
+
+- **Decoupling:** They promote loose coupling between system components, enhancing maintainability.
+
+- **Notification:** Domain events serve as a notification mechanism to inform other parts of the system about changes.
+
+- **Log and Audit Trail:** They can be logged for auditing and historical record-keeping.
+
+- **Event Sourcing:** Essential for event sourcing, where the entire system state is reconstructed by replaying events.
+
+Common examples include events like "OrderPlaced" or "UserRegistered." They are implemented as event classes and dispatched by entities or aggregates to notify the system of important changes.
+
+In summary, domain events play a vital role in DDD, allowing you to model and manage significant domain changes, foster loose coupling, and provide historical context for your system.
+
+## Overview
+
+```ts copy
+import { EventEmitter } from "events";
+
+// Step 1: Define the Abstract Domain Event
+abstract class DomainEvent<T> {
+  constructor(public data: T) {}
+}
+
+// Step 2: Create a Generic Event Emitter
+class EventDispatcher {
+  constructor(private eventEmitter: EventEmitter) {}
+
+  // Step 3: Publish Domain Events
+  publish<T>(event: DomainEvent<T>) {
+    this.eventEmitter.emit(event.constructor.name, event);
+  }
+
+  // Step 4: Subscribe to Domain Events
+  subscribe<T>(
+    eventType: { new (...args: any[]): DomainEvent<T> },
+    callback: (event: DomainEvent<T>) => void
+  ) {
+    this.eventEmitter.on(eventType.name, callback);
+  }
+}
+
+// Step 5: Send Welcome Email
+class EmailService {
+  sendWelcomeEmail(userEmail: string) {
+    // Implement your email sending logic here
+    console.log(`Sending a welcome email to: ${userEmail}`);
+  }
+}
+
+// Usage
+const eventDispatcher = new EventDispatcher(eventEmitter);
+const emailService = new EmailService();
+
+// Define specific event types for user creation and order creation
+class UserCreatedEvent extends DomainEvent<{
+  userName: string;
+  email: string;
+}> {}
+
+// Subscribe to the UserCreated event and send a welcome email
+eventDispatcher.subscribe(UserCreatedEvent, (event) => {
+  console.log(
+    `User created - Name: ${event.data.userName}, Email: ${event.data.email}`
+  );
+  emailService.sendWelcomeEmail(event.data.email);
+});
+
+// Simulate a user being created
+const newUserEvent = new UserCreatedEvent({
+  userName: "John Doe",
+  email: "john@example.com",
+});
+eventDispatcher.publish(newUserEvent);
+```

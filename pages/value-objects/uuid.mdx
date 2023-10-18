@@ -1,0 +1,69 @@
+# UUID
+
+```ts copy
+import { v4 as uuidv4 } from "uuid";
+
+interface StringInterface {
+  toString(): string;
+}
+
+class InvalidUuidException extends Error {
+  constructor(value: string) {
+    super(`Invalid UUID: ${value}`);
+    this.name = "InvalidUuidException";
+  }
+}
+
+class Uuid implements StringInterface {
+  private value: string;
+
+  constructor(value: string) {
+    if (!uuidv4.validate(value)) {
+      throw new InvalidUuidException(value);
+    }
+    this.value = value;
+  }
+
+  toString(): string {
+    return this.value;
+  }
+
+  static generate(): Uuid {
+    return new Uuid(uuidv4());
+  }
+}
+
+// Example usage
+const uuid = new Uuid("550e8400-e29b-41d4-a716-446655440000");
+console.log(uuid.toString()); // 550e8400-e29b-41d4-a716-446655440000
+```
+
+## Specs
+
+```ts copy
+import { Uuid } from "./Uuid"; // Import the Uuid class
+
+describe("Uuid", () => {
+  describe("constructor", () => {
+    it("should create a valid UUID instance", () => {
+      const validUuid = "550e8400-e29b-41d4-a716-446655440000";
+      const uuid = new Uuid(validUuid);
+      expect(uuid.toString()).toBe(validUuid);
+    });
+
+    it("should throw an error for an invalid UUID", () => {
+      const invalidUuid = "invalid-uuid";
+      expect(() => new Uuid(invalidUuid)).toThrowError(
+        "Invalid UUID: invalid-uuid"
+      );
+    });
+  });
+
+  describe("generate", () => {
+    it("should generate a valid UUID", () => {
+      const generatedUuid = Uuid.generate();
+      expect(uuidv4.validate(generatedUuid.toString())).toBe(true);
+    });
+  });
+});
+```

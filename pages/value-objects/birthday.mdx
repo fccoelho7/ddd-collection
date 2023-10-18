@@ -1,0 +1,109 @@
+# Birthday
+
+```ts copy
+import { Age } from "./Age"; // Import the Age class
+import { DateTime, Duration, Interval } from "luxon"; // Import luxon library for date manipulation
+
+class Birthday {
+  private date: DateTime;
+
+  constructor(date: DateTime) {
+    this.validate(date);
+    this.date = date;
+  }
+
+  getAge(): Age {
+    const currentDate = DateTime.now();
+    const diff = Interval.fromDateTimes(this.date, currentDate).toDuration([
+      "years",
+    ]);
+    return new Age(diff.years);
+  }
+
+  getDate(): DateTime {
+    return this.date;
+  }
+
+  toString(): string {
+    return this.date.toFormat("yyyy-MM-dd");
+  }
+
+  equals(birthday: Birthday): boolean {
+    return this.date.equals(birthday.getDate());
+  }
+
+  private validate(date: DateTime): void {
+    const now = DateTime.now();
+    if (date > now) {
+      throw new Error("Is date from the future.");
+    }
+  }
+}
+
+// Example usage
+const birthday = new Birthday(DateTime.fromISO("1990-01-01"));
+const age = birthday.getAge();
+console.log(age.getValue()); // 30
+```
+
+## Specs
+
+```ts copy
+import { Birthday } from "./Birthday"; // Import the Birthday class
+
+describe("Birthday", () => {
+  const futureDate = new Date("2050-01-01");
+  const validDate = new Date("1990-01-01");
+  const currentDate = new Date();
+
+  describe("constructor", () => {
+    it("should create a valid Birthday instance with a past date", () => {
+      const birthday = new Birthday(validDate);
+      expect(birthday.getDate()).toEqual(validDate);
+    });
+
+    it("should throw an error for a future date", () => {
+      expect(() => new Birthday(futureDate)).toThrowError(
+        "Is date from the future."
+      );
+    });
+  });
+
+  describe("getAge", () => {
+    it("should return the correct age for a past date", () => {
+      const birthday = new Birthday(validDate);
+      const age = birthday.getAge();
+      expect(age.getValue()).toBe(
+        currentDate.getFullYear() - validDate.getFullYear()
+      );
+    });
+
+    it("should return the correct age for the current date", () => {
+      const birthday = new Birthday(currentDate);
+      const age = birthday.getAge();
+      expect(age.getValue()).toBe(0);
+    });
+  });
+
+  describe("toString", () => {
+    it('should return the date in the "Y-m-d" format', () => {
+      const birthday = new Birthday(validDate);
+      expect(birthday.toString()).toBe("1990-01-01");
+    });
+  });
+
+  describe("equals", () => {
+    it("should return true for equal Birthday instances", () => {
+      const birthday1 = new Birthday(validDate);
+      const birthday2 = new Birthday(new Date(validDate));
+      expect(birthday1.equals(birthday2)).toBe(true);
+    });
+
+    it("should return false for different Birthday instances", () => {
+      const birthday1 = new Birthday(validDate);
+      const birthday2 = new Birthday(futureDate);
+      expect(birthday1.equals(birthday2)).toBe(false);
+    });
+  });
+});
+```
