@@ -34,15 +34,15 @@ class EventDispatcher {
 
   // Step 3: Publish Domain Events
   publish<T>(event: DomainEvent<T>) {
-    this.eventEmitter.emit(event.constructor.name, event);
+    this.eventEmitter.emit(event.name, event);
   }
 
   // Step 4: Subscribe to Domain Events
   subscribe<T>(
-    eventType: { new (...args: any[]): DomainEvent<T> },
+    event: { new (...args: any[]): DomainEvent<T> },
     callback: (event: DomainEvent<T>) => void
   ) {
-    this.eventEmitter.on(eventType.name, callback);
+    this.eventEmitter.on(event.name, callback);
   }
 }
 
@@ -77,5 +77,6 @@ const newUserEvent = new UserCreatedEvent({
   userName: "John Doe",
   email: "john@example.com",
 });
+
 eventDispatcher.publish(newUserEvent);
 ```

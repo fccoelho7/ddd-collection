@@ -1,0 +1,79 @@
+# RabbitMQ
+
+```ts copy
+import { EventEmitter } from "events";
+
+// Step 1: Define the Abstract Domain Event
+abstract class DomainEvent<T> {
+  constructor(public data: T) {}
+}
+
+// Step 2: Create a Generic Event Emitter
+class EventDispatcher {
+  constructor(private channel) {}
+
+  // Step 3: Publish Domain Events
+  async publish<T>(event: DomainEvent<T>, exchangeName: string) {
+    const queueName = event.name;
+    const channel = await this.connection.createChannel();
+    await channel.assertQueue(queueName, { durable: true });
+    channel.sendToQueue(queueName, Buffer.from(JSON.stringify(event.data)));
+  }
+
+  // Step 4: Subscribe to Domain Events
+  async subscribe<T>(
+    eventType: { new (...args: any[]): DomainEvent<T> },
+    exchangeName: string,
+    callback: (event: DomainEvent<T>) => void
+  ) {
+    const queueName = event.name;
+    const channel = await this.connection.createChannel();
+    await channel.assertQueue(queueName, { durable: true });
+    channel.consume(queueName, async function (msg: any) {
+      const input = JSON.parse(msg.content.toString());
+      try {
+        await callback(input);
+        channel.ack(msg);
+      } catch (e: any) {
+        console.log(e.message);
+      }
+    });
+  }
+}
+
+// Step 5: Send Welcome Email
+class EmailService {
+  sendWelcomeEmail(userEmail: string) {
+    // Implement your email sending logic here
+    console.log(`Sending a welcome email to: ${userEmail}`);
+  }
+}
+
+// Usage
+const connection = await amqp.connect("amqp://localhost"); // Replace with your RabbitMQ server URL
+const channel = await connection.createChannel();
+const eventDispatcher = new EventDispatcher(channel);
+const emailService = new EmailService();
+
+// Define specific event types for user creation and order creation
+class UserCreatedEvent extends DomainEvent<{
+  userName: string;
+  email: string;
+}> {}
+
+// Subscribe to the UserCreated event and send a welcome email
+eventDispatcher.subscribe(UserCreatedEvent, "userExchange", (event) => {
+  console.log(
+    `User created - Name: ${event.data.userName}, Email: ${event.data.email}`
+  );
+  emailService.sendWelcomeEmail(event.data.email);
+});
+
+// Simulate a user being created
+const newUserEvent = new UserCreatedEvent({
+  userName: "John Doe",
+  email: "john@example.com",
+});
+
+eventDispatcher.publish(newUserEvent);
+```
