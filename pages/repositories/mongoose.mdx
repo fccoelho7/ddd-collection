@@ -1,0 +1,78 @@
+# Mongoose
+
+```ts copy
+import mongoose, { Document, Schema, Model } from "mongoose";
+
+// Define a schema representing an item in your domain.
+const itemSchema = new Schema({
+  id: String,
+  name: String,
+});
+
+interface ItemDocument extends Document {
+  id: string;
+  name: string;
+}
+
+// Define an entity representing an item in your domain.
+class Item {
+  constructor(public id: string, public name: string) {}
+}
+
+// Define a repository interface for managing items.
+interface ItemRepository {
+  findById(id: string): Promise<Item | undefined>;
+  save(item: Item): Promise<void>;
+  remove(id: string): Promise<void>;
+}
+
+// Create a concrete implementation of the repository using Mongoose.
+class MongooseItemRepository implements ItemRepository {
+  private itemModel: Model<ItemDocument>;
+
+  constructor() {
+    this.itemModel = mongoose.model<ItemDocument>("Item", itemSchema);
+  }
+
+  async findById(id: string): Promise<Item | undefined> {
+    const item = await this.itemModel.findOne({ id }).exec();
+    return item ? new Item(item.id, item.name) : undefined;
+  }
+
+  async save(item: Item): Promise<void> {
+    await this.itemModel
+      .updateOne({ id: item.id }, { name: item.name }, { upsert: true })
+      .exec();
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.itemModel.deleteOne({ id }).exec();
+  }
+}
+
+// Usage
+mongoose.connect("mongodb://localhost:27017/your-database-name", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const itemRepository: ItemRepository = new MongooseItemRepository(mongoose);
+
+const item1 = new Item("1", "Item 1");
+const item2 = new Item("2", "Item 2");
+
+// Save items to the repository
+itemRepository.save(item1);
+itemRepository.save(item2);
+
+// Retrieve an item from the repository
+const retrievedItem = await itemRepository.findById("1");
+console.log(retrievedItem);
+
+// Remove an item from the repository
+await itemRepository.remove("2");
+
+// Verify the item is removed
+const removedItem = await itemRepository.findById("2");
+console.log(removedItem); // This should be undefined
+```
